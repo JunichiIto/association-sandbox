@@ -34,5 +34,10 @@ feature 'Post and comments' do
     click_button 'Create Comment'
     expect(page).to have_content 'こんばんは、伊藤です。'
     expect(page).to have_content '山田です。こんばんは！'
+
+    click_link '山田です。こんばんは！'
+    fill_in 'Text', with: '山田です。こんばんは！！！'
+    click_button 'Update Comment'
+    expect(page).to have_content '山田です。こんばんは！！！'
   end
 end
