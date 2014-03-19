@@ -58,6 +58,7 @@ class CommentsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_comment
+      # TODO use association
       @comment = Comment.find(params[:id])
     end
 
