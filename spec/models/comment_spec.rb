@@ -72,10 +72,34 @@ describe Comment do
           expect(@post.comments).to eq [@comment]
         end
       end
-      context 'use comment.post = @post' do
+      context 'use @comment.post = @post' do
         before :each do
           @comment = Comment.new(text: '山田です。伊藤さん、こんにちは！')
           @comment.post = @post
+        end
+        it 'has post' do
+          expect(@comment.post).to eq @post
+        end
+        it 'has post_id' do
+          expect(@comment.post_id).to eq @post.id
+        end
+        context 'not saved' do
+          specify 'post does not have comments' do
+            expect(@post.comments).to be_empty
+          end
+        end
+        context 'saved' do
+          before :each do
+            @comment.save
+          end
+          specify 'post has a comment' do
+            expect(@post.comments).to eq [@comment]
+          end
+        end
+      end
+      context 'use Comment.new(post: @post' do
+        before :each do
+          @comment = Comment.new(text: '山田です。伊藤さん、こんにちは！', post: @post)
         end
         it 'has post' do
           expect(@comment.post).to eq @post
