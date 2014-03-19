@@ -16,7 +16,7 @@ describe Comment do
         expect(@comment.post_id).to be_nil
       end
       specify 'post does not have comments' do
-        expect(@post.comments.size).to eq 0
+        expect(@post.comments).to be_empty
       end
     end
     context 'associated' do
@@ -30,7 +30,7 @@ describe Comment do
         expect(@comment.post_id).to eq @post.id
       end
       specify 'post has a comment' do
-        expect(@post.comments.size).to eq 1
+        expect(@post.comments).to eq [@comment]
       end
     end
   end
