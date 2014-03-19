@@ -12,7 +12,6 @@
   <thead>
   <tr>
     <th>Text</th>
-    <th></th>
   </tr>
   </thead>
 
@@ -20,7 +19,6 @@
   <% @post.comments.each do |comment| %>
       <tr>
         <td><%= link_to comment.text, edit_post_comment_path(@post, comment) %></td>
-        <td><%= link_to 'Destroy', [@post, comment], method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
   <% end %>
   </tbody>
@@ -31,7 +29,11 @@
 </p>
 <% end %>
 
-<%= link_to 'New Comment', new_post_comment_path(@post) %>
+<p>
+  <%= link_to 'New Comment', new_post_comment_path(@post) %>
+</p>
 
-<%= link_to 'Edit', edit_post_path(@post) %> |
-<%= link_to 'Back', posts_path %>
+<p>
+  <%= link_to 'Edit', edit_post_path(@post) %> |
+  <%= link_to 'Back', posts_path %>
+</p>
