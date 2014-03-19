@@ -20,17 +20,82 @@ describe Comment do
       end
     end
     context 'associated' do
-      before :each do
-        @comment = @post.comments.build(text: '山田です。伊藤さん、こんにちは！')
+      context 'use build' do
+        before :each do
+          @comment = @post.comments.build(text: '山田です。伊藤さん、こんにちは！')
+        end
+        it 'has post' do
+          expect(@comment.post).to eq @post
+        end
+        it 'has post_id' do
+          expect(@comment.post_id).to eq @post.id
+        end
+        it 'is not persisted' do
+          expect(@comment).to_not be_persisted
+        end
+        specify 'post has a comment' do
+          expect(@post.comments).to eq [@comment]
+        end
       end
-      it 'has post' do
-        expect(@comment.post).to eq @post
+      context 'use create' do
+        before :each do
+          @comment = @post.comments.create(text: '山田です。伊藤さん、こんにちは！')
+        end
+        it 'has post' do
+          expect(@comment.post).to eq @post
+        end
+        it 'has post_id' do
+          expect(@comment.post_id).to eq @post.id
+        end
+        it 'is persisted' do
+          expect(@comment).to be_persisted
+        end
+        specify 'post has a comment' do
+          expect(@post.comments).to eq [@comment]
+        end
       end
-      it 'has post_id' do
-        expect(@comment.post_id).to eq @post.id
+      context 'use @post.comments << @comment' do
+        before :each do
+          @comment = Comment.new(text: '山田です。伊藤さん、こんにちは！')
+          @post.comments << @comment
+        end
+        it 'has post' do
+          expect(@comment.post).to eq @post
+        end
+        it 'has post_id' do
+          expect(@comment.post_id).to eq @post.id
+        end
+        it 'is persisted' do
+          expect(@comment).to be_persisted
+        end
+        specify 'post has a comment' do
+          expect(@post.comments).to eq [@comment]
+        end
       end
-      specify 'post has a comment' do
-        expect(@post.comments).to eq [@comment]
+      context 'use comment.post = @post' do
+        before :each do
+          @comment = Comment.new(text: '山田です。伊藤さん、こんにちは！')
+          @comment.post = @post
+        end
+        it 'has post' do
+          expect(@comment.post).to eq @post
+        end
+        it 'has post_id' do
+          expect(@comment.post_id).to eq @post.id
+        end
+        context 'not saved' do
+          specify 'post does not have comments' do
+            expect(@post.comments).to be_empty
+          end
+        end
+        context 'saved' do
+          before :each do
+            @comment.save
+          end
+          specify 'post has a comment' do
+            expect(@post.comments).to eq [@comment]
+          end
+        end
       end
     end
   end
