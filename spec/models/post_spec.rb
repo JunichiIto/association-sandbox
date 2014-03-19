@@ -1,5 +1,7 @@
 require 'spec_helper'
 
 describe Post do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "has comments" do
+    expect(Post.new.comments.count).to eq 0
+  end
 end
