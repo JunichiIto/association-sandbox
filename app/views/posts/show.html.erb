@@ -5,24 +5,18 @@
   <%= @post.text %>
 </p>
 
+<p>
+  <%= link_to 'Edit', edit_post_path(@post) %>
+</p>
+
 <h1>Listing comments</h1>
 
 <% if @post.comments.present? %>
-<table>
-  <thead>
-  <tr>
-    <th>Text</th>
-  </tr>
-  </thead>
-
-  <tbody>
+<ul>
   <% @post.comments.each do |comment| %>
-      <tr>
-        <td><%= link_to comment.text, edit_post_comment_path(@post, comment) %></td>
-      </tr>
+    <li><%= link_to comment.text, edit_post_comment_path(@post, comment) %></li>
   <% end %>
-  </tbody>
-</table>
+</ul>
 <% else %>
 <p>
   コメントがありません。
@@ -33,7 +27,8 @@
   <%= link_to 'New Comment', new_post_comment_path(@post) %>
 </p>
 
+<hr>
+
 <p>
-  <%= link_to 'Edit', edit_post_path(@post) %> |
   <%= link_to 'Back', posts_path %>
 </p>
