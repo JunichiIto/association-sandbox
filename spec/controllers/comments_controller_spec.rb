@@ -15,7 +15,27 @@ describe CommentsController do
   describe 'GET edit' do
     context 'invalid post_id' do
       it 'raises ActiveRecord::RecordNotFound' do
-        expect{get :edit, id: @comment, post_id: @other_post}.to raise_error(ActiveRecord::RecordNotFound)
+        expect{
+          get :edit, id: @comment, post_id: @other_post
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+  describe 'PATCH update' do
+    context 'invalid post_id' do
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect{
+          patch :update, id: @comment, comment: {text: 'Hello'}, post_id: @other_post
+        }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+  describe 'DELETE destroy' do
+    context 'invalid post_id' do
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect{
+          delete :destroy, id: @comment, post_id: @other_post
+        }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
