@@ -1,11 +1,6 @@
 class CommentsController < ApplicationController
   before_action :set_post
-  before_action :set_comment, only: [:show, :edit, :update, :destroy]
-
-  # GET /comments/1
-  # GET /comments/1.json
-  def show
-  end
+  before_action :set_comment, only: [:edit, :update, :destroy]
 
   # GET /comments/new
   def new

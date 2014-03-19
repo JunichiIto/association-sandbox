@@ -1,7 +1,7 @@
 AssociationSandbox::Application.routes.draw do
 
   resources :posts do
-    resources :comments, except: %w(index)
+    resources :comments, except: %w(index show)
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
