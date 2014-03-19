@@ -5,9 +5,37 @@
   <%= @post.text %>
 </p>
 
+<h1>Listing comments</h1>
+
+<% if @post.comments.present? %>
+<table>
+  <thead>
+  <tr>
+    <th>Text</th>
+    <th>Post</th>
+    <th></th>
+    <th></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @post.comments.each do |comment| %>
+      <tr>
+        <td><%= comment.text %></td>
+        <td><%= comment.post %></td>
+        <td><%= link_to 'Edit', edit_post_comment_path(@post, comment) %></td>
+        <td><%= link_to 'Destroy', [@post, comment], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+<% else %>
 <p>
   コメントがありません。
 </p>
+<% end %>
+
+<%= link_to 'New Comment', new_post_comment_path(@post) %>
 
 <%= link_to 'Edit', edit_post_path(@post) %> |
 <%= link_to 'Back', posts_path %>
