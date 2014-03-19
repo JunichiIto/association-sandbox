@@ -39,5 +39,9 @@ feature 'Post and comments' do
     fill_in 'Text', with: '山田です。こんばんは！！！'
     click_button 'Update Comment'
     expect(page).to have_content '山田です。こんばんは！！！'
+
+    click_link '山田です。こんばんは！！！'
+    click_link 'Destroy'
+    expect(page).to_not have_content '山田です。こんばんは！！！'
   end
 end
