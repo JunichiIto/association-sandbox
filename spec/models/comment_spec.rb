@@ -100,16 +100,25 @@ describe Comment do
     end # end of context associated
   end # end of describe association
   describe 'validation' do
-    describe 'text' do
-      context 'with text' do
-        it 'is valid' do
-          expect(Comment.new(text: 'Hello')).to be_valid
-        end
+    before :each do
+      @post = Post.create(text: 'Hi.')
+      @comment = Comment.new(text: 'Hello', post: @post)
+    end
+    context 'with text and post' do
+      it 'is valid' do
+        expect(@comment).to be_valid
       end
-      context 'without text' do
-        it 'is invalid' do
-          expect(Comment.new(text: nil)).to have(1).error_on(:text)
-        end
+    end
+    context 'without text' do
+      it 'is invalid' do
+        @comment.text = nil
+        expect(@comment).to have(1).error_on(:text)
+      end
+    end
+    context 'without post' do
+      it 'is invalid' do
+        @comment.post = nil
+        expect(@comment).to have(1).error_on(:post)
       end
     end
   end
