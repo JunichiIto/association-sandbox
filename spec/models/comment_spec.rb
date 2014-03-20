@@ -2,127 +2,79 @@ require 'spec_helper'
 
 describe Comment do
   describe 'association' do
-    before :each do
-      @post = Post.create(text: 'こんにちは、伊藤です。')
-    end
-    context 'not associated' do
-      before :each do
-        @comment = Comment.new(text: '山田です。伊藤さん、こんにちは！')
-      end
-      it 'does not have post' do
-        expect(@comment.post).to be_nil
-      end
-      it 'does not have post_id' do
-        expect(@comment.post_id).to be_nil
-      end
-      specify 'post does not have comments' do
-        expect(@post.comments).to be_empty
+    let!(:post) { Post.create(text: "新しいMacBook Proを買いました！") }
+    context "not associated" do
+      specify do
+        Comment.new(text: "わー、いいなあ！")
+        expect(post.comments).to be_empty
       end
     end
-    context 'associated' do
-      context 'use build' do
-        before :each do
-          @comment = @post.comments.build(text: '山田です。伊藤さん、こんにちは！')
-        end
-        it 'has post' do
-          expect(@comment.post).to eq @post
-        end
-        it 'has post_id' do
-          expect(@comment.post_id).to eq @post.id
-        end
-        it 'is not persisted' do
-          expect(@comment).to_not be_persisted
-        end
-        specify 'post has a comment' do
-          expect(@post.comments).to eq [@comment]
-        end
+    describe "parent.children.create" do
+      specify do
+        comment = post.comments.create(text: "わー、いいなあ！")
+
+        expect(post.comments).to eq [comment]
+        expect(comment).to be_persisted
       end
-      context 'use create' do
-        before :each do
-          @comment = @post.comments.create(text: '山田です。伊藤さん、こんにちは！')
-        end
-        it 'has post' do
-          expect(@comment.post).to eq @post
-        end
-        it 'has post_id' do
-          expect(@comment.post_id).to eq @post.id
-        end
-        it 'is persisted' do
-          expect(@comment).to be_persisted
-        end
-        specify 'post has a comment' do
-          expect(@post.comments).to eq [@comment]
-        end
+    end
+    describe "parent.children.build" do
+      specify do
+        comment = post.comments.build(text: "わー、いいなあ！")
+
+        expect(post.comments).to eq [comment]
+        expect(comment).to_not be_persisted
       end
-      context 'use @post.comments << @comment' do
-        before :each do
-          @comment = Comment.new(text: '山田です。伊藤さん、こんにちは！')
-          @post.comments << @comment
-        end
-        it 'has post' do
-          expect(@comment.post).to eq @post
-        end
-        it 'has post_id' do
-          expect(@comment.post_id).to eq @post.id
-        end
-        it 'is persisted' do
-          expect(@comment).to be_persisted
-        end
-        specify 'post has a comment' do
-          expect(@post.comments).to eq [@comment]
-        end
+    end
+    describe "parent.children << child" do
+      specify do
+        comment = Comment.new(text: "わー、いいなあ！")
+        expect(comment).to_not be_persisted
+
+        post.comments << comment
+
+        expect(post.comments).to eq [comment]
+        expect(comment).to be_persisted
       end
-      context 'use @comment.post = @post' do
-        before :each do
-          @comment = Comment.new(text: '山田です。伊藤さん、こんにちは！')
-          @comment.post = @post
-        end
-        it 'has post' do
-          expect(@comment.post).to eq @post
-        end
-        it 'has post_id' do
-          expect(@comment.post_id).to eq @post.id
-        end
-        context 'not saved' do
-          specify 'post does not have comments' do
-            expect(@post.comments).to be_empty
-          end
-        end
-        context 'saved' do
-          before :each do
-            @comment.save
-          end
-          specify 'post has a comment' do
-            expect(@post.comments).to eq [@comment]
-          end
-        end
+    end
+    describe "parent.children = children" do
+      specify do
+        comment_old = Comment.new(text: "やった、コメント1番乗り！！")
+        post.comments << comment_old
+
+        expect(post.comments).to eq [comment_old]
+        expect(comment_old).to be_persisted
+
+        comment_1 = Comment.new(text: "わー、いいなあ！")
+        comment_2 = Comment.new(text: "うらやましすぎる！！")
+
+        post.comments = [comment_1, comment_2]
+
+        expect(post.comments).to eq [comment_1, comment_2]
+        expect(comment_1).to be_persisted
+        expect(comment_2).to be_persisted
+        expect(comment_old).to be_destroyed
       end
-      context 'use Comment.new(post: @post' do
-        before :each do
-          @comment = Comment.new(text: '山田です。伊藤さん、こんにちは！', post: @post)
-        end
-        it 'has post' do
-          expect(@comment.post).to eq @post
-        end
-        it 'has post_id' do
-          expect(@comment.post_id).to eq @post.id
-        end
-        context 'not saved' do
-          specify 'post does not have comments' do
-            expect(@post.comments).to be_empty
-          end
-        end
-        context 'saved' do
-          before :each do
-            @comment.save
-          end
-          specify 'post has a comment' do
-            expect(@post.comments).to eq [@comment]
-          end
-        end
+    end
+    describe "child.parent = parent" do
+      specify do
+        comment = Comment.new(text: "わー、いいなあ！")
+        comment.post = post
+        comment.save
+
+        expect(post.comments).to eq [comment]
       end
-    end # end of context associated
-  end # end of describe association
+    end
+    describe "Child.new(parent: parent) / Child.create(parent: parent)" do
+      specify do
+        comment_1 = Comment.new(text: "わー、いいなあ！", post: post)
+        comment_1.save
+
+        comment_2 = Comment.create(text: "うらやましすぎる！！", post: post)
+
+        expect(post.comments).to eq [comment_1, comment_2]
+      end
+    end
+  end
   describe 'validation' do
     before :each do
       @post = Post.create(text: 'Hi.')
