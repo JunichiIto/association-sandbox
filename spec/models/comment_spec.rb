@@ -74,6 +74,25 @@ describe Comment do
         expect(post.comments).to eq [comment_1, comment_2]
       end
     end
+    describe "child.parent_id = parent_id" do
+      specify do
+        comment = Comment.new(text: "わー、いいなあ！")
+        comment.post_id = post.id
+        comment.save
+
+        expect(post.comments).to eq [comment]
+      end
+    end
+    describe "Child.new(parent_id: parent_id) / Child.create(parent_id: parent_id)" do
+      specify do
+        comment_1 = Comment.new(text: "わー、いいなあ！", post_id: post.id)
+        comment_1.save
+
+        comment_2 = Comment.create(text: "うらやましすぎる！！", post_id: post.id)
+
+        expect(post.comments).to eq [comment_1, comment_2]
+      end
+    end
   end
   describe 'validation' do
     before :each do
