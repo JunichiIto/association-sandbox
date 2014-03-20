@@ -1,15 +1,6 @@
 class CommentsController < ApplicationController
   before_action :set_post
-  before_action :set_comment, only: [:edit, :update, :destroy]
-
-  # GET /comments/new
-  def new
-    @comment = @post.comments.build
-  end
-
-  # GET /comments/1/edit
-  def edit
-  end
+  before_action :set_comment, only: [:destroy]
 
   # POST /comments
   # POST /comments.json
@@ -21,21 +12,7 @@ class CommentsController < ApplicationController
         format.html { redirect_to @post, notice: 'Comment was successfully created.' }
         format.json { render action: 'show', status: :created, location: @comment }
       else
-        format.html { render action: 'new' }
-        format.json { render json: @comment.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /comments/1
-  # PATCH/PUT /comments/1.json
-  def update
-    respond_to do |format|
-      if @comment.update(comment_params)
-        format.html { redirect_to @post, notice: 'Comment was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
+        format.html { render template: 'posts/show' }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
       end
     end

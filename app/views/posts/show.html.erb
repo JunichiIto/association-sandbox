@@ -14,7 +14,10 @@
 <% if @post.comments.present? %>
 <ul>
   <% @post.comments.each do |comment| %>
-    <li><%= link_to comment.text, edit_post_comment_path(@post, comment) %></li>
+    <li>
+      <%= comment.text %>
+      <%= link_to '[Destroy]', [@post, comment], method: :delete, data: { confirm: 'Are you sure?' } %>
+    </li>
   <% end %>
 </ul>
 <% else %>
@@ -23,9 +26,28 @@
 </p>
 <% end %>
 
-<p>
-  <%= link_to 'New Comment', new_post_comment_path(@post) %>
-</p>
+<% @comment ||= @post.comments.build %>
+<%= form_for([@post, @comment]) do |f| %>
+    <% if @comment.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@comment.errors.count, "error") %> prohibited this comment from being saved:</h2>
+
+          <ul>
+            <% @comment.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :text %><br>
+      <%= f.text_area :text %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>
 
 <hr>
 
