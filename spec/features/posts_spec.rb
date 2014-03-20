@@ -65,4 +65,16 @@ feature 'Post and comments' do
     click_button 'Update Post'
     expect(page).to have_content 'こんにちは、伊藤です！！'
   end
+
+  scenario 'delete post' do
+    visit root_path
+    click_link 'New Post'
+    fill_in 'Text', with: 'こんにちは、伊藤です。'
+    click_button 'Create Post'
+    expect(page).to have_content 'こんにちは、伊藤です。'
+
+    click_link 'Back'
+    click_link 'Destroy'
+    expect(page).to_not have_content 'こんにちは、伊藤です！！'
+  end
 end
