@@ -11,9 +11,11 @@
 
 <h1>Listing comments</h1>
 
-<% if @post.comments.present? %>
+<% comments = @post.comments.select(&:persisted?) %>
+
+<% if comments.present? %>
 <ul>
-  <% @post.comments.each do |comment| %>
+  <% comments.each do |comment| %>
     <li>
       <%= comment.text %>
       <%= link_to '[Destroy]', [@post, comment], method: :delete, data: { confirm: 'Are you sure?' } %>

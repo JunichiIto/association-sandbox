@@ -32,6 +32,11 @@ feature 'Post and comments' do
     expect(page).to have_content 'コメントがありません。'
 
     # 新しい親記事へのコメント
+    ## わざと空テキストを送信
+    click_button 'Create Comment'
+    expect(page).to have_content "Text can't be blank"
+    expect(page).to have_content 'コメントがありません。'
+
     fill_in 'Text', with: '山田です。こんばんは！'
     click_button 'Create Comment'
     expect(page).to have_content 'こんばんは、伊藤です。'
