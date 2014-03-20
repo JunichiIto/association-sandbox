@@ -24,8 +24,13 @@ feature 'Post and comments' do
     expect(page).to have_content '鈴木です。こんにちは！'
 
     # 新しい親記事の投稿
-    visit root_path
+    click_link 'Back'
     click_link 'New Post'
+
+    ## わざと空テキストを送信
+    click_button 'Create Post'
+    expect(page).to have_content "Text can't be blank"
+
     fill_in 'Text', with: 'こんばんは、伊藤です。'
     click_button 'Create Post'
     expect(page).to have_content 'こんばんは、伊藤です。'
@@ -45,5 +50,19 @@ feature 'Post and comments' do
     # コメントの削除
     click_link '[Destroy]'
     expect(page).to have_content 'コメントがありません。'
+  end
+
+  scenario 'update post' do
+    visit root_path
+    click_link 'New Post'
+    fill_in 'Text', with: 'こんにちは、伊藤です。'
+    click_button 'Create Post'
+    expect(page).to have_content 'こんにちは、伊藤です。'
+
+    click_link 'Back'
+    click_link 'Edit'
+    fill_in 'Text', with: 'こんにちは、伊藤です！！'
+    click_button 'Update Post'
+    expect(page).to have_content 'こんにちは、伊藤です！！'
   end
 end
